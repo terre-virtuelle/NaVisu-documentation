@@ -1,0 +1,158 @@
+\chapter*{Module {\tt navisu-extensions}}
+\section{La commande {\bf \tt TargetCmd}}
+Dans ce document on s'attache surtout à la description de l'utilisation de cette commande et non pas à son implémentation.
+Les {\tt TargetCmd} permettent d'interroger NaVisu sur la position d'objets de type {\tt NavigationData}, c'est à dire la plupart des objets d'une carte S57, par rapport à une position définie par l'utilisateur. \\
+Construction d'une commande {\tt TargetCmd} coté client : 
+\begin{Verbatim}[frame=single]
+Target target = new Target(new BeaconCardinal(), 48.3130, -4.6214));
+Command navCmd = new Command("TargetCmd", target);
+\end{Verbatim}
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=19cm]{images/extension/target.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{3}\textit{La classe {\tt Target}}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Comme les autres commandes, le premier argument est le nom de la commande. Le second argument est du type {\tt Target} qui implémente l'interface : {\tt NavigationData}. Cet objet {\tt Target} est aussi susceptible de posséder un objet de type {\tt NavigationData}.\\
+Après réception et traitement par NaVisu, un objet de type {\tt NavigationDataSet} sera renvoyé.
+\subsection{Construction de l'objet {\tt Target} pour la requête}
+\begin{itemize}
+\item Lors de l'émission de la requête, cet argument sert à définir le type précis d'objets à cibler. On se contente alors d'utiliser un constructeur par défaut. On peut affiner la requête en précisant un type exact ou au contraire l'élargir en donnant une super classe.  Par exemple {\tt Buoyage} pour cibler tout type de balisage.
+\end{itemize}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=18cm]{images/extension/buoyage.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{3}\textit{Les classes {\tt Buoyage}}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{itemize}
+\item Les deux doubles suivants définissent la position de l'observateur. C'est par rapport à cette position que seront ciblés les objets dans NaVisu.
+Les arguments suivants sont optionnels.
+\item Un identifiant peut être ajouté, à l'usage du client.
+\item L'argument {\tt distance} : s'il n'est pas présent : le premier objet répondant au type demandé sera renvoyé.
+S'il est présent le ou les objets, répondant au type demandé, se trouvant dans un cercle dont le rayon est défini par cette distance, seront renvoyés (l'unité est le mètre).
+\item Si l'argument {\tt azimuth} est présent, les données dans un secteur {\tt azimuth $\pm 10°$} seront renvoyées, éventuellement filtrées par la distance.
+\end{itemize}
+\subsection{Exemple de codage d'un client}
+Voir un exemple : \href{https://github.com/terre-virtuelle/NaVisuClient}{https://github.com/terre-virtuelle/NaVisuClient}
+\begin{itemize}
+\item Initialisation du client.
+\item Ouverture du canal "/navigation" sur le serveur
+\item Création des requêtes
+\end{itemize}
+{\small
+\begin{Verbatim}[frame=single]
+
+public void init() {
+	cmdVertx = VertxFactory.newVertx();
+	cmdVertx.createHttpClient().setHost("localhost")
+	.setPort(9090)
+	.connectWebsocket("/navigation", (WebSocket websocket) -> {
+	websocket.dataHandler((Buffer data) -> {
+		if (data != null) {
+			response(data.toString());
+		}
+	});
+	cmdWS = websocket;
+	cmdRequest(new Target(new BeaconCardinal(), 48.3130, -4.6214)); 
+	cmdRequest(new Target(new Buoyage(), 48.3130, -4.6214));
+	cmdRequest(new Target(new BeaconSpecialPurpose(), 48.3130, -4.6214));
+	});
+}
+\end{Verbatim}
+}
+\begin{itemize}
+\item Instanciation de la commande
+\item Sérialisation de l'objet commande en xml
+\item Envoi au serveur.
+\end{itemize}
+{\small
+\begin{Verbatim}[frame=single]
+
+public void cmdRequest(NavigationData target) {
+	Writer stringWriter = new StringWriter();
+	Command navCmd = new Command("TargetCmd", target);
+	try {
+		ImportExportXML.exports(navCmd, stringWriter);
+	} catch (JAXBException ex) {
+	Logger.getLogger(AppTarget.class.getName()).log(Level.SEVERE, null, ex);
+	}
+	cmdWS.writeTextFrame(stringWriter.toString());
+}
+
+\end{Verbatim}
+}
+\newpage
+Le résultat est en xml
+\begin{itemize}
+\item Après lecture du résultat.
+\item Traduction du résultat en objets.
+\item Récupération de la liste des NavigationData et coercition de type si nécessaire.
+\item Utilisation des données.
+\end{itemize}
+{\small
+\begin{Verbatim}[frame=single]
+
+private void response(String resp) {
+
+	NavigationDataSet navigationDataSet = new NavigationDataSet();
+	try {
+		navigationDataSet = ImportExportXML.imports(navigationDataSet,
+		 new StringReader(resp));
+	} catch (JAXBException ex) {
+	Logger.getLogger(App.class.getName()).log(Level.SEVERE, ex.toString(), ex);
+	}
+
+	List<NavigationData> result = navigationDataSet.getNavigationDataList();
+	for (NavigationData n : result) {
+		Target t = (Target) n;
+		System.out.print("buoy : " 
+		+ ((Buoyage) t.getNavigationData()).getObjectName());
+		System.out.print(" type : " 
+		+ t.getNavigationData().getClass().getSimpleName());
+		System.out.printf(" distance : %.2f m", t.getDistance());
+		System.out.printf(" azimuth : %.2f °\n", t.getAzimuth());
+	}
+}
+
+\end{Verbatim}
+}
+\subsection{Visualisation sur NaVisu}
+
+En plus de renvoyer la liste des objets ciblés, NaVisu visualise les requêtes et les éléments trouvés sur la carte. Résultat des trois requêtes précédentes :
+
+\begin{Verbatim}[frame=single]
+cmdRequest(new Target(new BeaconCardinal(), 48.3130, -4.6214)); 
+cmdRequest(new Target(new Buoyage(), 48.3130, -4.6214));
+cmdRequest(new Target(new BeaconSpecialPurpose(), 48.3130, -4.6214));
+\end{Verbatim}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=19cm]{images/extension/targets.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{3}\textit{Ciblage des bouées dans NaVisu, plusieurs critères de choix d'objets, sans paramètres de distance}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=19cm]{images/extension/targets_1.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{3}\textit{Ciblage des bouées dans NaVisu avec une distance de 6000 m}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

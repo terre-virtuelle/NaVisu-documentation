@@ -1,0 +1,131 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Module STL}
+\section{Présentation}
+Le module {\tt navisu-stl} permet la création d'objets géoréférencés à l'aide d'imprimantes 3D. Ces objets sont des modèles numériques de terrain (MNT), des données cartographiques (S57 de l'IHO) ou des données bathymétriques.
+Le process : après sélection, les données au format interne NaVisu sont transformées au format {\tt x3D}.
+Ces fichiers sont importés dans le logiciel Blender, pour la génération de simples facettes triangulaires pour l'ensemble des données, car le fichier d'origine contient des primitives {\tt x3D} non lues par les logiciels d'impression 3D. Ces mêmes fichiers sont ensuite réexportés au format {\tt x3D}. Ils sont alors importés dans le logiciel  
+\href{https://ultimaker.com/en/products/cura-software}{Cura}, il permet le contrôle et la simulation des différentes couches d'impression, puis exporte les données au format STL et au format de la machine cible pour impression. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=10cm]{images/stl/gouletBrest.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Premier prototype d'impression 3D, brut de fabrication : Le goulet de Brest}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cartographie et MNT}
+\subsection{Sélection des zones à imprimer}
+A partir du catalogue de cartes, sélectionner une carte : {\tt\bf F1 + Clic droit} sur l'emprise de la carte. Puis à l'aide l'ihm, préciser les tuiles à générer. Pour le moment, les tuiles, sont carrées comme les plateaux des imprimantes.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/choixTuiles.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Choix de la zone à imprimer à partir du catalogue de cartes S57.}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/generationTuiles.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Sélection des tuiles, position, nombre et génération du fichier x3D.}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Génération des tuiles}
+L'appui sur la touche {\ttfamily\bf Génération} provoque le calcul des données, un signal sonore indique la fin d'une séquence pour une tuile.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/generationTuiles_1.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Génération des tuiles}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Import Export des fichiers x3D}
+Le format de données \href{http://x3dgraphics.com/examples/X3dForWebAuthors/}{x3D} est un format {\tt xml} de description de la géométrie des objets et aussi de la réactivité des objets sur le web. Nous utilisons le premier groupe de commandes. Il possède un ensemble de primitives : {\tt Cylinder, Box, Elevation Grid, \ldots}, ces primitives ne sont pas reconnues par les logiciels de génération STL. Elles simplifie significativement la génération de code à partir des données NaVisu, aussi nous utilisons le passage par Blender, qui accepte ces données en import et génère pour ces objets de simples faces indexées.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/blender.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Import du fichier .x3d dans Blender, puis export en .x3d : génération des facettes simples.}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Visualisation des données x3D}
+Comme première validation du travail, nous pouvons visualiser les données x3D à l'aide de l'outil : \href{https://savage.nps.edu/X3D-Edit/#Downloads}{X3DEdit}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/x3dRade.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Visualisation dans X3DEdit}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Logiciel de génération STL}
+Nous utilisons les machines de la gamme {\bf UltiMaker}, elles peuvent être puilotées par le logiciel Cura. Afin de bien valider le fichier il convient de regarder chaque couche.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/cura_0.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Import dans Cura}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/cura_1.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Vérification des couches dans Cura}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/stl/cura_2.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Vérification des couches dans Cura, ici le socle.}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{La bathymétrie}
+
+La précision du MNT de base fourni par WorldWind est suffisante pour des applications maritimes, la cartographie à partir des cartes vectorielles S57 est très précise, par contre la précision de la bathymétrie est trés variable suivant les endroits du monde. Elle est insuffisante pour des applications maritimes dans nos latitudes. Pour la France, le SHOM, projet Homonim, met à la disposition du public des données sous différents formats. \href{http://diffusion.shom.fr/produits/bathymetrie/mnt-facade-atl-homonim.html}{MNT Bathymétrique de la façade atlantique}. Le volume de ces données est important et pour leur exploitation il convient de les stocker dans une base de données. Nous avons fait le choix de la base PostGis. Le module {\tt navisu-stl}, utilise les modules {\tt navisu-bathymetry} pour les services de visualisation des données de profondeur et le module {\tt navisu-db} pour les services de connexion aux bases de données.\\
+Caratéristiques de la base de données
+\begin{itemize}
+	\item base PostgresSQL
+	\item name : BathyShomB
+	\item template : postgres
+	\item user : admin
+	\item passwd : admin
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+	\framebox[1\width]{
+		\includegraphics[width=15cm]{images/bathy/bathy_11.png}
+	}
+	\begin{figure}[ht]
+		\caption{\label{sdModel}\textit{Triangulation niveau 0 + bathymétrie}}
+	\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -2,6 +2,7 @@
 
 
 \section{Présentation}
+
 Le module d'acquisition de données de \nav\  est distribué. Un serveur reçoit les données des différents capteurs
 les analyse, les traite puis les distribue au format XML [ou JSON (option)] aux différents clients. Dans la version la plus compacte serveur et client se trouvent sur une même machine.
  Le protocole de communication utilisé sont les WebSockets. \footnote{\href{http://fr.wikipedia.org/wiki/WebSocket}{http://fr.wikipedia.org/wiki/WebSocket}} ce protocole permet les actions bidirectionnelles, {\em push} et {\em pull}, avec les clients. Actuellement seules les requêtes {\em pull} venant des clients sont prises en compte, mais il est simple d'introduire des actions {\em push} de la part du serveur pour des remontées d'alarmes par exemple.

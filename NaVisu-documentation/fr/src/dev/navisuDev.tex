@@ -10,11 +10,11 @@
 %-------------------------------------------------------------------------
 \usepackage{helvet}
 %\usepackage{psboxit,pstcol}
-
+%\usepackage{french}
 \usepackage[francais]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{moreverb}
-%\usepackage{eurosym}
+\usepackage{eurosym}
 \usepackage{index}
 \usepackage{amsfonts}
 \usepackage{graphics}
@@ -28,13 +28,14 @@
 \usepackage{framed}
 \usepackage[framed,hyperref,standard]{ntheorem}
 \usepackage{fancyhdr,lastpage}
+\usepackage{fancyvrb}
 
 %-------------------------------------------------------------------------
 % --- Commandes --------------------------------------------------------------
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
 \renewcommand\contentsname{Table des mati\`eres}
-\def\ladate{mai 2016}
+\def\ladate{décembre 2017}
 \def\mot-cle#1{
 	{\noindent {\bf Mots-cl\'es} : #1\vspace{-.5em}\vspace{0pt}}
 	\def\mot-cle{\par}
@@ -51,7 +52,9 @@
 
 
 % --- Identification du document ---------------------------------------------
-\def\soustitre{\bf\sc Canevas de développement d'applications géo-référencées maritimes}
+\def\soustitre{\bf\sc Plateforme de développement \vspace{0.2cm}
+	 pour applications de visualisation de données maritimes géoréférencées 
+	 \vspace{0.2cm} en 3D}
 \def\projet{\bf\sc NaVisu}
 \def\sousprojet{\bf\sc Dossier de développement}
 \def\titre{\bf\sc NaVisu }
@@ -61,7 +64,7 @@
 \def\leverif{l}
 \def\chef{Lithops}
 \def\lechef{sm}
-\def\laversion{1.1}
+\def\laversion{2.0}
 \def\sujet{\sc Manuel développeur} 
 
 % --- Mise en page ------------------------------------------------------------
@@ -138,12 +141,12 @@
 }
 
 %--------------------------------------------------------------------------
-\pgfdeclareimage[width=2cm,interpolate=true]{navisuLogo}{images/logonavisuglobe}
+\pgfdeclareimage[width=2cm,interpolate=true]{navisuLogo}{images/logoTV400}
 
 \pagestyle{fancy}
 \fancyhead[LE,LO]{\pgfuseimage{navisuLogo}}
-\fancyhead[CE,CO]{\sc Logiciel d'aide à la navigation maritime en 3D }
-\fancyhead[RE,RO]{2015 -- \thepage/\pageref{LastPage}}
+\fancyhead[CE,CO]{\sc Développement d'applications  maritimes en 3D }
+\fancyhead[RE,RO]{2017 -- \thepage/\pageref{LastPage}}
 \fancyfoot[LE,LO]{}
 \fancyfoot[CE,CO]{\pgfuseimage{footline-enib-adresse}}
 \fancyfoot[RE,RO]{}

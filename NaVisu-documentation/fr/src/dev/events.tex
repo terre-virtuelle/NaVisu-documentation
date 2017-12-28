@@ -28,7 +28,7 @@ La touche M, permettra de faire disparaitre ce widget.
 2- Pour les objets venant de WorldWind, c'est du Swing, il suffit de mettre l'objet WorldWindow à l'écoute d'un événement de sélection par exemple et de filtrer cet evt : 
 
 2.1 Globalement :
-
+\begin{verbatim}
 private void addListeners() {
 	wwd.addSelectListener((SelectEvent event) -> {
 		Object o = event.getTopObject();
@@ -39,21 +39,21 @@ private void addListeners() {
 		}
 	});
 }
-
+\end{verbatim}
 On voit ici que tous les objets de type PointPlacemark, au moins pour les couches sensibles aux événements, seront sélectionnés.
 Pour réagir à cet evt, celà peut convenir pour afficher leur nom par exemple, mais pour pour une action spécifique, c'est sans doute trop général. Il faut donc filtrer des objets dont la vue est un PointPlacemark, mais qui ont un type particulier.
 
 Une solution : créer la classe Poimark : 
-
+\begin{verbatim}
 public class Poimark extends PointPlacemark{
 	
 	public Poimark(Position pstn) {
 		super(pstn);
 	}
 }
-
+\end{verbatim}
 Ensuite filtrer les Poimark : 
-
+\begin{verbatim}
 private void addListeners() {
 	wwd.addSelectListener((SelectEvent event) -> {
 		Object o = event.getTopObject();
@@ -64,10 +64,10 @@ private void addListeners() {
 		}
 	});
 }
-
+\end{verbatim}
 Enfin instancier des Poimark plutôt que de simples PointPlacemark :
 
-
+\begin{verbatim}
 public Set<Pair<Double, Double>> showPoi(Map<Pair<Double, Double>, String> data) {
 	Set<Pair<Double, Double>> latLonSet = data.keySet();
 	
@@ -88,3 +88,4 @@ public Set<Pair<Double, Double>> showPoi(Map<Pair<Double, Double>, String> data)
 
 return latLonSet;
 }
+\end{verbatim}

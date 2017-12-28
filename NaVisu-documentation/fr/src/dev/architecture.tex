@@ -1,0 +1,420 @@
+\chapter*{Architecture du projet NaVisu}
+
+
+\section{Présentation}
+Le projet NaVisu est conçu pour une programmation en grand, il doit donc être possible de rajouter de nouvelles fonctionnalités ou de modifier l'implémentation d'autres,sans impacter le code existant. Nous présentons  ici l'approche modulaire de l'architecture, sous-projets et composants, puis classes pour le code fonctionnel. 
+\section{Premier niveau de modularité : les sous-projets}
+Le projet est divisé en modules ou sous-projets, ce niveau d'organisation est géré par 	{\tt   Gradle}. Chaque module correspond à un groupe de fonctionnalités. Certain modules sont des modules techniques, d'autres sont des modules métier. La dépendance entre ces modules est indiquée dans les fichiers {\tt build.gradle} de chaque sous-projet. Les dépendances circulaires sont contrôlées par {\tt Gradle}. 
+ \begin{center}
+\begin{minipage}{9cm}
+
+	\begin{boxedverbatim}
+dependencies {
+	compile project(':navisu-domain')
+	compile project(':navisu-gpx')
+	compile project(':navisu-core')
+	compile project(':navisu-app')
+	compile project(':navisu-geometry')
+	compile project(':navisu-instruments')
+	compile project(':navisu-charts')
+	compile project(':navisu-photos')
+	compile fileTree(dir: 'lib', include: '*.jar') 
+}
+\end{boxedverbatim}
+\end{minipage}
+\begin{figure}[ht]
+	\caption{\label{3}\textit{Exemple du module {\tt navisu-navigation}}}
+\end{figure}
+ \end{center}
+ 
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \begin{center}
+ 	\framebox[1\width]{
+ 		\includegraphics[height=20
+ 		cm]{images/architecture.png}
+ 	}
+ 	\begin{figure}[ht]
+ 		\caption{\label{3}\textit{Les modules de NaVisu}}
+ 	\end{figure}
+ \end{center}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \newpage
+ \subsection{Description succinte  des modules}
+ \begin{itemize}
+\item {\tt	navisu-bathymetry	}\\
+Module métier, permet la visualisation de la bathymétrie, depuis une base de données PostGis,  des images raster ou des fichiers NetCDF (développement en cours).
+\item {\tt	navisu-charts	}\\
+Module métier, permet la visualisation des catalogues de cartes vectorielles ou raster, l'affichage des cartes raster KAP ou GeoTiff et des cartes vectorielles S57. Dans le cas de cartes vectorielles chaque objet S57 est instancié sous la forme d'un objet Java  susceptible de posséder un comportement.
+\item {\tt	navisu-client}\\
+Module technique, permet le lien entre NaVisu et le serveur de données des capteurs NMEA, AIS, ... Utilise le framework {\tt Vert.x} : \href{http://vertx.io/}{\tt http://vertx.io/ }pour l'implémentation de divers protocoles de communication. Les données en entrée sont en {\tt xml}, les data sont définies par un schéma. Les données sont tout d'abord parsées à l'aide de l'API JAXB, puis diffusées dans l'application sous forme d'événements $C³$.
+\item {\tt	navisu-core	}\\
+Module technique,  assure le lien avec la bibliothèque WorldWind développée par la NASA, \href{https://goworldwind.org/}{\tt https://goworldwind.org/}
+\item {\tt	navisu-currents	}\\
+Module métier, permet la visualisation des données open data de courants du Shom et des données au format NetCDF (en cours)
+\item {\tt	navisu-database	}\\
+Module technique, permet la connexion à la base embarquée Derby, aux bases extérieures via JDBC (MySQL, PostGis), à la base embarquée Neo4J. Ce module utilise l'ORM EclipseLink afin que les objets puissent être traités comme des entitées au sens de JPA, par exemple : les Ship, permettant de mettre en base les différents navires signalés par AIS.
+\item {\tt	navisu-domain	}\\
+Module technique, regroupe l'ensemble des modèles de données utilisées, avec une faible dépendance vis à vis des autres modules, il est facilement exportable.
+\item {\tt	navisu-geodesy	}\\
+Module technique, utile pour les calculs de distances, cap, ... sur le géoïde. Cette bibliothèque utilise les formules Thaddeus Vincenty : \\
+ \href{http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf}{\tt http://www.ngs.noaa.gov/PUBS\_LIB/inverse.pdf}, implémentées  \\
+ par Mike Gavaghan : 
+ \href{https://github.com/mgavaghan/geodesy}{\tt https://github.com/mgavaghan/geodesy}
+\item {\tt	navisu-geometry	}\\
+Module technique, implémentation des courbes de Bézier, affichage et lissage par moindres carrés et d'objets 3D au format {\tt obj}.
+\item {\tt	navisu-gpx	}\\
+Module technique, lecture et affichage dynamique des trajets au format Gpx : \\
+\href{http://www.topografix.com/gpx.asp}{\tt http://www.topografix.com/gpx.asp}
+\item {\tt	navisu-instruments	}\\
+Module métier, ensemble des instruments permettant la lecture des données de navigation. Ces instruments sont développés en JavaFX/FXML, avec un strict respect du pattern MVC. Les instruments sont conçus pour pouvoir être intégrés à un système tête haute, ils sont portables sur mobiles Android ou IOS.
+\item {\tt	navisu-kml	}\\
+Module technique, lecture et affichage des données au format KML.
+\item {\tt	navisu-launcher	}\\
+Module technique, module d'initialisation des connexions entre composants, lancement et arrêt de l'application.
+\item {\tt	navisu-magnetic	}\\
+Module métier, affichage du modèle de déclinaison magnétique de la NOAA : \\ 
+\href{https://www.ngdc.noaa.gov/geomag/}{\tt https://www.ngdc.noaa.gov/geomag/}
+\item {\tt	navisu-media	}\\
+Module technique, diffusion de fichiers sons.
+\item {\tt	navisu-navigation	}\\
+Module métier, ensemble de fonctionnalités d'aide à la navigation, préparation des routes et simulation. Implémentation des comportements des agents "intelligents" : balisage, amers.
+\item {\tt	navisu-netcdf	}\\
+Module technique, lecture générique des fichiers NetCDF, ce module est utilisé par les autres modules métier, météo, bathymétrie, ...
+\item {\tt	navisu-photos	}\\
+Module technique, affichage de photos et décodage des fichiers au format {\tt exif}.
+\item {\tt	navisu-sailingDirections	}\\
+Module métier, visualisation et édition des Instructions Nautiques du Shom, [module en cours].
+\item {\tt	navisu-sedimentology	}\\
+Module métier, visualisation des données du shom au format Shapefile.
+\item {\tt	navisu-server	}\\
+Module technique, premier module de NaVisu, permet l'acquisition de données depuis plusieurs sources, multiplexe ces données et les parse. Le résultat est envoyé au[x] client[s] sous forme xml.
+\item {\tt	navisu-shapefiles	}\\
+Module technique, module  générique de lecture des fichiers ShapeFile.
+\item {\tt	navisu-speech	}\\
+Module technique, module de synthèse de parole.
+\item {\tt	navisu-system	}\\
+Module technique, permet de lancer la lecture de fichiers de données de différents formats .
+\item {\tt	navisu-topology	}\\
+Module technique, permet de faire localement les différentes opérations d'inclusion, d'intersection, ... en utilisant la bibliothèque JTS Topology Suite : \\
+ \href{http://tsusiatsoftware.net/jts/main.html}{\tt http://tsusiatsoftware.net/jts/main.html}. Permet aussi la triangulation des surfaces par la méthode de Delaunay et le partitionnement par diagrammes de Véronoï en utilisant la bibliothèque {\tt JDelaunay } \href{https://github.com/orbisgis/jdelaunay}{\tt https://github.com/orbisgis/jdelaunay}
+\item {\tt	navisu-widgets	}\\
+Module technique, offre les services nécessaires à la création et la manipulation des instruments.
+\item {\tt	navisu-wms	}\\
+Module technique, offre les services génériques de consultation des web services. 
+ \end{itemize}
+\newpage
+  \section{Deuxième niveau de modularité : les composants}
+  A l'intérieur des modules, on va trouver une architecture en composants, construite à l'aide la bibliothèque $C^3$ : \href{http://c3.capcaval.org/}{\tt http://c3.capcaval.org/}
+  
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \begin{center}
+   	\framebox[1\width]{
+   		\includegraphics[height=11
+   		cm]{images/component.png}
+   	}
+   	\begin{figure}[ht]
+   		\caption{\label{3}\textit{Les E/S d'un composant }}
+   	\end{figure}
+   \end{center}
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \subsection{Les services et les événements}
+   Comme pour les modules, on trouvera des composants techniques et des composants métier. Le composant est une abstraction qui permet de définir des services, à la fois rendus et consommés et des événements à la fois rendus et consommés sans spécifier une implémentation particulière. L'implémentation est injectée au démarrage de l'application ainsi, si le contrat ou service est respecté, une modification de l'implémentation n'impactera pas l'ensemble de l'application, les modifications restant locales au composant. Les différents composants de Navisu constituent l'architecture statique de l'application. Ensute selon les besoins ils instancierons  des contrôleurs pour 
+   supporter la dynamique de l'application.
+   
+   \subsection{Application}
+   Dans la pratique un composant est représenté par deux interfaces et une classe d'implémentation. Il peut aussi instancier d'autres objets, comme des contrôleurs par exemple. l'ensemble du code ne va utiliser que son interface de service. Au démarrage la bibliothèque $C³$ va injecter l'implémentation en cours.
+   \subsection{Un exemple : le {\tt GpsLogger}}
+   \begin{itemize}
+   	\item {\bf Interface du composant} : Cette interface est trés simple, elle est une interface de typage pour la lib $C³$.
+   	
+\vspace{0.2cm}
+   	\begin{boxedverbatim}
+   	public interface GpsLogger	extends Component {
+   	
+   	}
+   		\end{boxedverbatim}
+   
+   \vspace{0.5cm}
+   	\item {\bf Interface des services} : 
+   	
+   	\vspace{0.2cm}
+  	\begin{boxedverbatim} 
+   public interface GpsLoggerServices extends ComponentService {
+   
+   void on(String ... files);
+   
+   default void off() {
+   }
+   
+   boolean isOn();
+   
+   boolean canOpen(String category);
+   
+   InstrumentDriver getDriver();
+   }
+   
+   		\end{boxedverbatim}
+   		
+   		 \vspace{0.5cm}
+   	L'interface {\tt ComponentService} va apporter des contraintes techniques pour la gestion du cycle de vie du composant. Les autres services sont des services techniques : 
+   	\begin{verbatim}
+   boolean canOpen(String category);
+   	\end{verbatim}
+   	Permet à l'application de savoir si ce composant répond au critère demandé via le menu.
+   		\begin{verbatim}
+   		 InstrumentDriver getDriver();
+   		\end{verbatim}
+   		Retourne le composant pour action.\\
+   		Ou sont des services métier : 
+   		\begin{verbatim}
+   		void on(String ... files);
+   		\end{verbatim}
+   		Met en route le Logger avec en argument zéro ou des fichiers NMEA
+   		\begin{verbatim}
+   		default void off() {
+   		}
+   		\end{verbatim}
+   		Arrete le service
+   		\begin{verbatim}
+   		boolean isOn();
+   		\end{verbatim}
+   		
+   		Indique l'état du  service.\\
+   	
+\newpage
+   \item {\bf Implémentation} : \\
+   	\begin{boxedverbatim} 
+   	public class GpsLoggerImpl
+   	implements GpsLogger, GpsLoggerServices, 
+   	                  InstrumentDriver, ComponentState {
+   	
+   	protected boolean on = false;
+   	private final String NAME = "GpsLogger";
+   	private GpsEventsController gpsEventsController;
+   	
+   	@Override
+   	public void componentInitiated() {
+   	}
+   	@Override
+   	public void componentStarted() {
+   	}
+   	@Override
+   	public void componentStopped() {
+   	}
+   	@Override
+   	public void on(String... files) {
+     	if (on == false) {
+    	on = true;
+    	gpsEventsController = new GpsLoggerGpsEventsController();
+    	gpsEventsController.subscribe();
+   	   }
+   	}
+   	@Override
+   	public void off() {
+    	if (on == true) {
+    	on = false;
+    	}
+   	}
+   	@Override
+   	public InstrumentDriver getDriver() {
+    	return this;
+   	}
+   	@Override
+   	public boolean canOpen(String category) {
+    	return category.equals(NAME);
+   	}
+   	@Override
+   	public boolean isOn() {
+    	return on;
+    	}
+   	}
+   \end{boxedverbatim} 
+   
+   	\newpage
+   	\item {\bf Connexion et mise service du composant}, dans la classe {\tt AppMain} du module {\tt navisu-launcher} :
+   	\begin{itemize}
+   		\item Déclaration de la classe d'implémentation 
+   		\item Enregistrement du service auprès du componentManager
+   		\item Enfin, puisqu'il sagit d'un composant qui sera activé par le menu, enregistrement auprès de l'instrumentDriverManagerServices.
+   	\end{itemize}
+   	
+   	Voir à ce propos le chapitre sur la création d'items de menu dans le dock.\\
+   	\vspace{0.2cm}
+   	
+   		\begin{boxedverbatim} 
+   LOGGER.info("\n"
+   + componentManager.startApplication(
+       
+       ....
+       
+      GpsLoggerImpl.class,
+       ....
+     )
+   );
+   .....
+   
+   GpsLoggerServices gpsLoggerServices 
+            = componentManager.getComponentService(GpsLoggerServices.class);
+   
+   .....
+   
+   instrumentDriverManagerServices.registerNewDriver(
+                                  gpsLoggerServices.getDriver()
+                            );
+   
+   	\end{boxedverbatim} 
+   \end{itemize}
+   
+   \subsection{Les annotations}
+   Nous avons vu précédemment que l'interconnexion entre les composants se faisait à l'exécution, à la fois pour les services et les événements. Les spécifications s'écrivent à l'aide des annotations.
+   \begin{itemize}
+   	\item Consommation d'un service : 
+   	
+   	 \vspace{0.2cm}
+   	 \begin{boxedverbatim}
+   	@UsedService
+   	GuiAgentServices guiAgentServices;
+   	 \end{boxedverbatim}
+   	 
+   	 \vspace{0.2cm}
+   	 Un composant peut demander à consommer les services d'un autre composant. A partir de là ce composant a accès aux services public du composant producteur.
+   	 
+   	 \vspace{0.2cm}
+   	 \begin{boxedverbatim}
+   	guiAgentServices.getRoot().getChildren().add(routeDataEditorController);
+   	 \end{boxedverbatim}
+   	 
+   	 \vspace{0.2cm}
+   	\newpage
+   	\item Production d'un événement
+   	
+   	\begin{itemize}
+   		\item définition du modèle de donnée à transmettre :
+   		
+   		\vspace{0.2cm}
+   		\begin{boxedverbatim}
+   		public class Bathymetry {
+   			
+   			private List<Point3D> grid;
+   			
+   			public Bathymetry() {
+   				  grid = new ArrayList<>();
+   			}
+   			public Bathymetry(List<Point3D> grid) {
+   			 	 this.grid = grid;
+   			}
+   			public List<Point3D> getGrid() {
+   			  	return grid;
+   			}
+   			public void setGrid(List<Point3D> grid) {
+   			  	this.grid = grid;
+   			}
+   			public void add(Point3D point) {
+   			    grid.add(point);
+   			}
+   			public int size() {
+   				 return grid.size();
+   			}
+   			@Override
+   			public String toString() {
+   				 return "Bathymetry{" + "grid=" + grid + '}';
+   			}
+   		}
+   		\end{boxedverbatim}
+   		\vspace{0.2cm}
+   		\item Définition de l'interface de l'événement
+   		
+   		\vspace{0.2cm}
+   		\begin{boxedverbatim}
+   		public interface BathymetryEvent
+   		extends ComponentEvent {
+   			
+   			public void notifyBathymetryMessageChanged(Bathymetry data);
+   		}
+   		\end{boxedverbatim}
+   		
+   		\vspace{0.2cm}
+   		
+   		\item Définition de l'interface de services de tir
+   		
+   		\vspace{0.2cm}
+   		\begin{boxedverbatim}
+   			public interface BathymetryEventProducerServices
+   			extends ComponentService {
+   				
+   				public void setBathymetry(Bathymetry data);
+   				
+   			}
+   		\end{boxedverbatim}
+   		
+   	\newpage
+   		\item L'implémentation d'un tireur d'événement 
+   		
+   		\vspace{0.2cm}
+   			\begin{boxedverbatim}
+   				public class BathymetryEventProducerImpl
+   				implements BathymetryEventProducer, 
+   				BathymetryEventProducerServices {
+   					
+   					@ProducedEvent
+   					protected BathymetryEvent bathymetryEvent;
+   					
+   					@Override
+   					public void setBathymetry(Bathymetry evt) {
+   					          	bathymetryEvent.notifyBathymetryMessageChanged(evt);
+   					}
+   					
+   			}
+   			\end{boxedverbatim}
+   			
+   			\vspace{0.2cm}
+   			\item Le tir
+   			
+   			\vspace{0.2cm}
+   			\begin{boxedverbatim}
+   			bathymetryEventProducerServices.setBathymetry(new Bathymetry(data));
+   			\end{boxedverbatim}
+   	\end{itemize}
+   
+   	
+   	\item Consommation d'un événement
+   	
+   	\begin{itemize}
+   		\item Déclaration d'intérêt
+   
+   	
+   	\vspace{0.2cm}
+   	\begin{boxedverbatim}
+   	ComponentManager cm = ComponentManager.componentManager;
+   	ComponentEventSubscribe<BathymetryEvent> bathyES =
+                	 cm.getComponentEventSubscribe(BathymetryEvent.class);
+   	
+   	\end{boxedverbatim}
+   	
+   	\vspace{0.2cm}
+   	\item Implémentation de l'interface correspondant à l'événement : 
+   	
+   		\vspace{0.2cm}
+   	\begin{boxedverbatim}
+   	private void subscribe() {
+   		bathyES.subscribe(new BathymetryEvent() {
+   			
+   			@Override
+   			public void notifyBathymetryMessageChanged(Bathymetry data) {
+   				if (data.size() != 0) {
+   				 	// logique applicative
+   				 }
+   				});
+   			}
+   	\end{boxedverbatim}
+   		\end{itemize}
+   \end{itemize}
+   
+   	\vspace{0.2cm}
+   	
+   	Et voilà 	\includegraphics[height=1cm]{images/presence_offline.png} \\
+   	
+   	Avec cette architecture, le producteur ne connait pas le ou les consommateurs, les consommateurs n'ont pas de connaissance directe du producteur, ils connaissent simplement un service. A noter que le producteur doit être un composant, par contre une simple classe peut aussi être une consommatrice d'événements.
+   	
+   	

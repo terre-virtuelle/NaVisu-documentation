@@ -1,0 +1,56 @@
+\select@language {french}
+\contentsline {figure}{\numberline {1}{\ignorespaces \textit {Exemple du module {\tt navisu-navigation}}}}{13}{figure.0.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces \textit {Les modules de NaVisu}}}{14}{figure.0.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces \textit {Les E/S d'un composant }}}{17}{figure.0.3}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces \textit {D\'eploiement centralis\'e}}}{24}{figure.1.1}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces \textit {D\'eploiement distribu\'e}}}{24}{figure.1.2}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces \textit {Aucune requ\^ete client, les donn\'ees dynamiques venant des capteurs sont perdues}}}{26}{figure.1.3}
+\contentsline {figure}{\numberline {1.4}{\ignorespaces \textit {Exemple de requ\^ete client, suivie d'une r\'eponse asynchrone \`a partir du premier port s\'erie enregistr\'e.}}}{27}{figure.1.4}
+\contentsline {figure}{\numberline {1.5}{\ignorespaces \textit {Exemple de requ\^ete client, suivie d'une r\'eponse synchrone \`a partir de donn\'ees provenant d'un fichier.}}}{28}{figure.1.5}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces \textit {Ensemble des classes de l'API NMEA}}}{32}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces \textit {Cat\'egorisation des informations NMEA}}}{33}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces \textit {Minimun d'information pour la navigation}}}{34}{figure.2.3}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces \textit {Date}}}{34}{figure.2.4}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces \textit {Informations de position}}}{35}{figure.2.5}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces \textit {Informations de vitesse et de distance}}}{36}{figure.2.6}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces \textit {Informations sur les waypoints}}}{37}{figure.2.7}
+\contentsline {figure}{\numberline {2.8}{\ignorespaces \textit {Informations sur les satellites}}}{38}{figure.2.8}
+\contentsline {figure}{\numberline {2.9}{\ignorespaces \textit {Informations sur le vent}}}{38}{figure.2.9}
+\contentsline {figure}{\numberline {2.10}{\ignorespaces \textit {Bathym\'etrie}}}{39}{figure.2.10}
+\contentsline {figure}{\numberline {2.11}{\ignorespaces \textit {Analyse de la phrase GSV}}}{40}{figure.2.11}
+\contentsline {figure}{\numberline {2.12}{\ignorespaces \textit {Analyse de la phrase RMB}}}{40}{figure.2.12}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces \textit {Sch\'ema g\'en\'eral des entr\'ees/sorties}}}{43}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces \textit {Un client \'el\'ementaire en javascript}}}{48}{figure.3.2}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces \textit {Diagramme UML simplifi\'e d'un Display}}}{50}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces \textit {L'item Instruments}}}{52}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces \textit {L'ic\^one centrale de Instruments et les sous-items}}}{52}{figure.4.3}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces \textit {Le menu Instruments}}}{54}{figure.4.4}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces \textit {Une modification de l'IHM va impacter l'application}}}{56}{figure.4.5}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces \textit {Si les contrats de services sont respect\'es, un changement du code de l'IHM ne concerne pas l'application}}}{56}{figure.4.6}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces \textit {Gradle d\'etectera un tel probl\`eme}}}{56}{figure.4.7}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces \textit {Projection \'equirectangulaire}}}{61}{figure.6.1}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces \textit {Conventions de la num\'erotation des tuiles WorldWind}}}{62}{figure.6.2}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces \textit {Fronti\`eres d'une carte}}}{63}{figure.6.3}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces \textit {Les Etats Unis}}}{64}{figure.6.4}
+\contentsline {figure}{\numberline {6.5}{\ignorespaces \textit {Affichage de la carte}}}{64}{figure.6.5}
+\contentsline {figure}{\numberline {6.6}{\ignorespaces \textit {Niveaux de d\'etail et la 3D}}}{65}{figure.6.6}
+\contentsline {figure}{\numberline {6.7}{\ignorespaces \textit {Premier prototype d'impression 3D, brut de fabrication : Le goulet de Brest}}}{67}{figure.6.7}
+\contentsline {figure}{\numberline {6.8}{\ignorespaces \textit {Choix de la zone \`a imprimer \`a partir du catalogue de cartes S57.}}}{68}{figure.6.8}
+\contentsline {figure}{\numberline {6.9}{\ignorespaces \textit {S\'election des tuiles, position, nombre et g\'en\'eration du fichier x3D.}}}{68}{figure.6.9}
+\contentsline {figure}{\numberline {6.10}{\ignorespaces \textit {G\'en\'eration des tuiles}}}{69}{figure.6.10}
+\contentsline {figure}{\numberline {6.11}{\ignorespaces \textit {Import du fichier .x3d dans Blender, puis export en .x3d : g\'en\'eration des facettes simples.}}}{70}{figure.6.11}
+\contentsline {figure}{\numberline {6.12}{\ignorespaces \textit {Visualisation dans X3DEdit}}}{70}{figure.6.12}
+\contentsline {figure}{\numberline {6.13}{\ignorespaces \textit {Import dans Cura}}}{71}{figure.6.13}
+\contentsline {figure}{\numberline {6.14}{\ignorespaces \textit {V\'erification des couches dans Cura}}}{71}{figure.6.14}
+\contentsline {figure}{\numberline {6.15}{\ignorespaces \textit {V\'erification des couches dans Cura, ici le socle.}}}{72}{figure.6.15}
+\contentsline {figure}{\numberline {6.16}{\ignorespaces \textit {Triangulation niveau 0 + bathym\'etrie}}}{73}{figure.6.16}
+\contentsline {figure}{\numberline {6.17}{\ignorespaces \textit {La classe {\tt Target}}}}{75}{figure.6.17}
+\contentsline {figure}{\numberline {6.18}{\ignorespaces \textit {Les classes {\tt Buoyage}}}}{76}{figure.6.18}
+\contentsline {figure}{\numberline {6.19}{\ignorespaces \textit {Ciblage des bou\'ees dans NaVisu, plusieurs crit\`eres de choix d'objets, sans param\`etres de distance}}}{79}{figure.6.19}
+\contentsline {figure}{\numberline {6.20}{\ignorespaces \textit {Ciblage des bou\'ees dans NaVisu avec une distance de 6000 m}}}{80}{figure.6.20}
